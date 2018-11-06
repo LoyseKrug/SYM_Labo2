@@ -7,19 +7,19 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-public class AsyncActivity extends AppCompatActivity {
+public class DiffActivity extends AppCompatActivity {
     TextView sendText = null;
-    TextView receivedText = null;
+    TextView logText = null;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set layout
-        setContentView(R.layout.activity_sendandreceived);
+        setContentView(R.layout.activity_sendandlogs);
 
         // Link items from layout
         sendText = findViewById(R.id.sendTextfield);
-        receivedText = findViewById(R.id.receivedTextfield);
+        logText = findViewById(R.id.logTextfield);
     }
 }

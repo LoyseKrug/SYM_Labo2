@@ -7,7 +7,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-public class AsyncActivity extends AppCompatActivity {
+public class SerializationActivity extends AppCompatActivity {
     TextView sendText = null;
     TextView receivedText = null;
 
@@ -16,10 +16,10 @@ public class AsyncActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set layout
-        setContentView(R.layout.activity_sendandreceived);
+        setContentView(R.layout.activity_sendandlogs);
 
         // Link items from layout
         sendText = findViewById(R.id.sendTextfield);
-        receivedText = findViewById(R.id.receivedTextfield);
+        receivedText = findViewById(R.id.logLabel);
     }
 }

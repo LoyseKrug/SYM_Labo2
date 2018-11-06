@@ -85,13 +85,16 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, AsyncActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_differe) {
-
+            Intent intent = new Intent(MainActivity.this, DiffActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_graphql) {
 
         } else if (id == R.id.nav_serialization) {
-
+            Intent intent = new Intent(MainActivity.this, SerializationActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_compress) {
-
+            Intent intent = new Intent(MainActivity.this, CompressedActivitygit.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

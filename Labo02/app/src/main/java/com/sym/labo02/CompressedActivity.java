@@ -7,7 +7,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-public class AsyncActivity extends AppCompatActivity {
+public class CompressedActivity extends AppCompatActivity {
     TextView sendText = null;
     TextView receivedText = null;
 
