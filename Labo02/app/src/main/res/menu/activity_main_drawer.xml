@@ -7,18 +7,22 @@
         <item
                 android:id="@+id/nav_asynch"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Asych Send Request"/>
+                android:title="Asynchrone"/>
         <item
                 android:id="@+id/nav_differe"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Différé"/>
+                android:title="Différée"/>
         <item
-                android:id="@+id/nav_objet"
+                android:id="@+id/nav_graphql"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="GraphQL"/>
+        <item
+                android:id="@+id/nav_serialization"
                 android:icon="@drawable/ic_menu_slideshow"
-                android:title="Transmission Objet"/>
+                android:title="Sérialisation"/>
         <item
                 android:id="@+id/nav_compress"
                 android:icon="@drawable/ic_menu_manage"
-                android:title="Compressé"/>
+                android:title="Compressée"/>
     </group>
 </menu>
