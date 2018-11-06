@@ -1,5 +1,6 @@
 package com.sym.labo02;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -81,7 +82,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_asynch) {
-            // Handle the camera action
+            Intent intent = new Intent(MainActivity.this, AsyncActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_differe) {
 
         } else if (id == R.id.nav_graphql) {

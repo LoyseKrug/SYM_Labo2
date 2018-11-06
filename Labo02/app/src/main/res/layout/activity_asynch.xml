@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+                android:text="Envoi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/sendLabel"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="Données à envoyer"
+                android:ems="10"
+                android:id="@+id/sendTextfield"/>
+        <TextView
+                android:text="Réception"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/receivedLabel"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="Donnée Reçu"
+                android:ems="10"
+                android:id="@+id/receivedTextfield"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
