@@ -1,9 +1,13 @@
 package com.sym.labo02;
 
+import android.app.Fragment;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,23 +19,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, AsyncFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -41,6 +37,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Run Async Fragment as default fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        AsyncFragment fragment = AsyncFragment.newInstance();
+        fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
     }
 
     @Override
@@ -78,27 +80,35 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_asynch) {
-            Intent intent = new Intent(MainActivity.this, AsyncActivity.class);
-            startActivity(intent);
+            AsyncFragment fragment = AsyncFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
         } else if (id == R.id.nav_differe) {
-            Intent intent = new Intent(MainActivity.this, DiffActivity.class);
-            startActivity(intent);
+            DiffereFragment fragment = DiffereFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
         } else if (id == R.id.nav_graphql) {
-
+            // TODO
         } else if (id == R.id.nav_serialization) {
-            Intent intent = new Intent(MainActivity.this, SerializationActivity.class);
-            startActivity(intent);
+            SerializationFragment fragment = SerializationFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
         } else if (id == R.id.nav_compress) {
-            Intent intent = new Intent(MainActivity.this, CompressedActivitygit.class);
-            startActivity(intent);
+            CompressedFragment fragment = CompressedFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

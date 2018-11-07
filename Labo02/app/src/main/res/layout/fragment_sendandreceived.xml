@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                                             android:layout_height="match_parent">
-
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.sym.labo02.AsyncFragment">
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -29,5 +30,9 @@
                 android:text="Donnée Reçu"
                 android:ems="10"
                 android:id="@+id/receivedTextfield"/>
+        <Button
+                android:text="Send"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/sendBtn"/>
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

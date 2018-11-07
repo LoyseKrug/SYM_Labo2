@@ -1,7 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.sym.labo02.SerializationFragment">
+
+    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -28,5 +31,19 @@
                 android:text="Logs"
                 android:ems="10"
                 android:id="@+id/logTextfield"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <Button
+                    android:text="Send in XML"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/xmlBtn"/>
+            <Button
+                    android:text="Send in JSON"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/jsonBtn" android:layout_weight="1"/>
+        </LinearLayout>
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

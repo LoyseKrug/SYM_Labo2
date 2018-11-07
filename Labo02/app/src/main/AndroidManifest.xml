@@ -18,22 +18,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-                android:name="com.sym.labo02.AsyncActivity"
-                android:label="Asynchrone">
-        </activity>
-        <activity
-                android:name="com.sym.labo02.SerializationActivity"
-                android:label="Object">
-        </activity>
-        <activity
-                android:name="com.sym.labo02.CompressedActivity"
-                android:label="Compressé">
-        </activity>
-        <activity
-                android:name="com.sym.labo02.DiffActivity"
-                android:label="Differe">
-        </activity>
     </application>
 
 </manifest>
