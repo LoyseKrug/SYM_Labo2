@@ -21,21 +21,25 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AsyncFragment.OnFragmentInteractionListener {
 
+    Toolbar toolbar = null;
+    DrawerLayout drawer = null;
+    NavigationView navigationView = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         // Run Async Fragment as default fragment
@@ -43,6 +47,8 @@ public class MainActivity extends AppCompatActivity
         //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         AsyncFragment fragment = AsyncFragment.newInstance();
         fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+
+        toolbar.setTitle("Asynchrone");
     }
 
     @Override
@@ -86,17 +92,22 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_asynch) {
+            toolbar.setTitle("Asynchrone");
             AsyncFragment fragment = AsyncFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
         } else if (id == R.id.nav_differe) {
+            toolbar.setTitle("Différé");
             DiffereFragment fragment = DiffereFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
         } else if (id == R.id.nav_graphql) {
+            toolbar.setTitle("GraphQL");
             // TODO
         } else if (id == R.id.nav_serialization) {
+            toolbar.setTitle("Sérialisé");
             SerializationFragment fragment = SerializationFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
         } else if (id == R.id.nav_compress) {
+            toolbar.setTitle("Compressé");
             CompressedFragment fragment = CompressedFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
         }
