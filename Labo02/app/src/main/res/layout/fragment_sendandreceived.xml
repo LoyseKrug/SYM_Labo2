@@ -16,23 +16,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:text="Données à envoyer"
                 android:ems="10"
-                android:id="@+id/sendTextfield"/>
-        <TextView
-                android:text="Réception"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/receivedLabel"/>
-        <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="Donnée Reçu"
-                android:ems="10"
-                android:id="@+id/receivedTextfield"/>
+                android:id="@+id/sendTextfield" android:hint="Enter a text"/>
         <Button
                 android:text="Send"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/sendBtn"/>
+        <TextView
+                android:text="Réception"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/receivedLabel"/>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="371dp" android:id="@+id/responseText"
+                android:scrollbars="vertical"/>
     </LinearLayout>
 </FrameLayout>

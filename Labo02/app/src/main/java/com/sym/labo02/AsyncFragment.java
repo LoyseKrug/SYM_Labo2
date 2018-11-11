@@ -1,12 +1,33 @@
+/**
+ * Authors: Adrien Allemand, James Smith, Loyse Krug
+ *
+ * Date:
+ *
+ * Objective: This class manage the Async fragment of the app. In this fragment, the user is supposed to send a
+ * text/plain post request to the server. The answer is displayed in the fragments response field.
+ *
+ * Comments: The class must be a singleton to avoid creating many instances of okHttpClient.
+ * (plus, in ordre to connect to the server, an Android.permission.Internet has been added to the manifest)
+ *
+ * Sources: -
+ *
+ */
+
 package com.sym.labo02;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Response;
 
 
 /**
@@ -18,6 +39,15 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class AsyncFragment extends Fragment {
+
+    //We use a SymComManager to interact with the server
+    private SymComManager scm;
+    private String postRequestURL = "http://sym.iict.ch/rest/txt";
+
+    private EditText textToSend;
+    private TextView response;
+    private Button sendButton;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     //private static final String ARG_PARAM1 = "param1";
@@ -30,6 +60,7 @@ public class AsyncFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public AsyncFragment() {
+        scm = SymComManager.getInstance();
         // Required empty public constructor
     }
 
@@ -61,8 +92,37 @@ public class AsyncFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sendandreceived, container, false);
+        View view =  inflater.inflate(R.layout.fragment_sendandreceived, container, false);
+
+        //The class variables are linked with the layout elements
+        textToSend = (EditText) view.findViewById(R.id.sendTextfield);
+        response = (TextView) view.findViewById(R.id.responseText);
+        sendButton = (Button) view.findViewById(R.id.sendBtn);
+
+        //As the answer can be longer than the text view, this field must be scrollable
+        response.setMovementMethod(new ScrollingMovementMethod());
+
+
+        sendButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+
+                //When the button is clicked, a communication listener is set in order to display the server's answer
+                //in the response field
+                scm.setCommunicationEventListener(new CommunicationEventListener() {
+                        @Override
+                      public boolean handleServerResponse(String res) {
+                          response.setText(res);
+                          return false;
+                      }
+                  });
+                //once the listener is set, the request can be sent
+                scm.sendRequest(postRequestURL, textToSend.getText().toString());
+            }
+        });
+        return view;
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -70,6 +130,8 @@ public class AsyncFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -88,6 +150,9 @@ public class AsyncFragment extends Fragment {
         mListener = null;
     }
 
+
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -98,8 +163,11 @@ public class AsyncFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }
