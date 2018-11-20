@@ -3,16 +3,17 @@
  *
  * Date:
  *
- * Objective: -
+ * Objective: This class manage the Async fragment of the app. In this fragment, the user is supposed to send a
+ * text/plain post request to the server. The answer is displayed in the fragments response field.
  *
- * Comments: -
+ * Comments: The class must be a singleton to avoid creating many instances of okHttpClient.
+ * (plus, in ordre to connect to the server, an Android.permission.Internet has been added to the manifest)
  *
- * Sources: https://www.baeldung.com/guide-to-okhttp
+ * Sources: -
  *
  */
 
-
-package com.sym.labo02;
+package com.sym.labo02.FragmentManagers;
 
 import android.content.Context;
 import android.net.Uri;
@@ -26,31 +27,32 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.sym.labo02.CommunicationEventListener;
+import com.sym.labo02.R;
+import com.sym.labo02.SymComManager;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link DiffereFragment.OnFragmentInteractionListener} interface
+ * {@link AsyncFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link DiffereFragment#newInstance} factory method to
+ * Use the {@link AsyncFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DiffereFragment extends AsyncFragment {
+public class AsyncFragment extends Fragment {
 
-    private EditText textToSend = null;
-    private TextView logs = null;
-    private Button sendButton = null;
-    private TextView response = null;
+    //We use a SymComManager to interact with the server
+    protected SymComManager scm;
+    protected String postRequestURL = "http://sym.iict.ch/rest/txt";
 
-    private boolean requestSent = false;
-    private ArrayList<String> logList = new ArrayList<String>();
+    private EditText textToSend;
+    private TextView response;
+    private Button sendButton;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -63,18 +65,19 @@ public class DiffereFragment extends AsyncFragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public DiffereFragment() {
+    public AsyncFragment() {
+        scm = SymComManager.getInstance();
         // Required empty public constructor
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     * @return A new instance of fragment DiffereFragment.
+     * @return A new instance of fragment AsyncFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DiffereFragment newInstance() {
-        DiffereFragment fragment = new DiffereFragment();
+    public static AsyncFragment newInstance() {
+        AsyncFragment fragment = new AsyncFragment();
         Bundle args = new Bundle();
         //args.putString(ARG_PARAM1, param1);
         //args.putString(ARG_PARAM2, param2);
@@ -85,86 +88,69 @@ public class DiffereFragment extends AsyncFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        /*if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }*/
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_differe, container, false);
+        View view =  inflater.inflate(R.layout.fragment_sendandreceived, container, false);
 
+        //The class variables are linked with the layout elements
         textToSend = (EditText) view.findViewById(R.id.sendTextfield);
-        logs  = (TextView) view.findViewById(R.id.logsDisplayer);
-        response = (TextView) view.findViewById(R.id.responseDisplayer);
+        response = (TextView) view.findViewById(R.id.responseText);
         sendButton = (Button) view.findViewById(R.id.sendBtn);
 
-        logs.setMovementMethod(new ScrollingMovementMethod());
+        //As the answer can be longer than the text view, this field must be scrollable
         response.setMovementMethod(new ScrollingMovementMethod());
+
 
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                response.setText("");
-                addLog();
-                AsyncTask<String, Void, Void> asyncTask = new AsyncTask<String, Void, Void>(){
+                scm.setCommunicationEventListener(new CommunicationEventListener() {
+                    @Override
+                    public boolean handleServerResponse(String res) {
+                        response.setText(res);
+                        return true;
+                    }
+                });
+
+                AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>(){
 
                     @Override
-                    protected Void doInBackground(String... strings) {
-                        while(requestSent == false){
-                            if(SymComManager.isNetworkAvailable(getActivity().getApplicationContext())){
-
-                                for(String s : logList){
-                                    Request req = scm.createRequest(
-                                            postRequestURL,
-                                            scm.createHeader("text/plain", "text/plain"),
-                                            scm.createTextBody(s));
-                                    Response resp = scm.sendRequest(req);
-                                    try {
-                                        response.setText(response.getText().toString() + resp.body().string());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                                emptyLogList();
-                                requestSent = true;
-                            } else {
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                    protected String doInBackground(String... strings) {
+                        Request request = scm.createRequest(
+                                postRequestURL,
+                                scm.createHeader("text/plain", "text/plain"),
+                                scm.createTextBody(textToSend.getText().toString()));
+                        Response resp = scm.sendRequest(request);
+                        try {
+                            return resp.body().string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                         return null;
                     }
 
+                    @Override
+                    protected void onPostExecute(String resp) {
+                        super.onPostExecute(resp);
+                        scm.getCommunicationEventListener().handleServerResponse(resp);
+                    }
                 };
-                asyncTask.execute();
 
+                asyncTask.execute();
             }
         });
 
         return view;
     }
 
-    private void addLog(){
-        String text = textToSend.getText().toString();
-        if(!text.isEmpty() && !text.equals("")){
-            requestSent = false;
-            logList.add(text);
-            logs.setText(logs.getText().toString() + "\n" + text);
-
-        }
-    }
-
-    private void emptyLogList(){
-        logs.setText("");
-        logList.clear();
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -172,6 +158,8 @@ public class DiffereFragment extends AsyncFragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -190,6 +178,9 @@ public class DiffereFragment extends AsyncFragment {
         mListener = null;
     }
 
+
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -200,8 +191,11 @@ public class DiffereFragment extends AsyncFragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    /*public interface OnFragmentInteractionListener {
+
+    public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }*/
+    }
+
+
 }

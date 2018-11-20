@@ -1,4 +1,7 @@
-package com.sym.labo02;
+package com.sym.labo02.Services;
+
+import com.sym.labo02.CommunicationEventListener;
+import com.sym.labo02.SymComManager;
 
 public class AsyncSendRequest {
 

@@ -1,14 +1,8 @@
 package com.sym.labo02;
 
-import android.app.Fragment;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.sym.labo02.FragmentManagers.AsyncFragment;
+import com.sym.labo02.FragmentManagers.CompressedFragment;
+import com.sym.labo02.FragmentManagers.DiffereFragment;
+import com.sym.labo02.FragmentManagers.SerializationFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AsyncFragment.OnFragmentInteractionListener {

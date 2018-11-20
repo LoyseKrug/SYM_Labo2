@@ -42,7 +42,7 @@ public class SymComManager {
         return instance;
     }
 
-    void setCommunicationEventListener(CommunicationEventListener cel){
+    public void setCommunicationEventListener(CommunicationEventListener cel){
         this.cel = cel;
     }
 

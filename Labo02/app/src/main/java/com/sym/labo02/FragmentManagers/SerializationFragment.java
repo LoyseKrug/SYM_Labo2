@@ -1,4 +1,4 @@
-package com.sym.labo02;
+package com.sym.labo02.FragmentManagers;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,6 +12,8 @@ import android.widget.*;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.sym.labo02.CommunicationEventListener;
+import com.sym.labo02.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
