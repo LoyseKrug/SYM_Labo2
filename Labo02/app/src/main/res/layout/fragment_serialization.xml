@@ -10,27 +10,78 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <TextView
-                android:text="Envoi"
+                android:text="Phone numbers"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/sendLabel"/>
-        <EditText
+                android:layout_height="36dp" android:id="@+id/title" android:textAlignment="center"
+                android:textStyle="bold" android:textSize="18sp" android:lineSpacingExtra="8sp"
+                android:textColor="@android:color/black"/>
+        <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="Données à envoyer"
-                android:ems="10"
-                android:id="@+id/sendTextfield"/>
-        <TextView
-                android:text="Logs"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:text="First Name*"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/labelFirstName"/>
+            <TextView
+                    android:text="Last Name*"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/labelLastName" android:layout_weight="1"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/logLabel"/>
-        <EditText
+                android:layout_height="wrap_content">
+            <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/editFirstName"/>
+            <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/editLastName" android:layout_weight="1"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="Logs"
-                android:ems="10"
-                android:id="@+id/logTextfield"/>
+                android:layout_height="wrap_content">
+            <TextView
+                    android:text="Middle Name"
+                    android:layout_width="49dp"
+                    android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/labelMiddleName"/>
+            <TextView
+                    android:text="Gender*"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/labelGender" android:layout_weight="1"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <EditText
+                    android:layout_width="191dp"
+                    android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/editMiddleName"/>
+            <Spinner
+                    android:id="@+id/spinnerGender"
+                    android:layout_width="198dp"
+                    android:layout_height="match_parent"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:text="Phone number*"
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/labelPhoneNumber"/>
+
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/editPhoneNumber"/>
+        </LinearLayout>
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -44,6 +95,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/jsonBtn" android:layout_weight="1"/>
         </LinearLayout>
+        <TextView
+                android:text="Response"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/responseLabel" android:textStyle="bold"/>
+        <TextView
+                android:layout_width="match_parent"
+                android:scrollbars="vertical"
+                android:layout_height="276dp" android:id="@+id/responseDisplayer"/>
+        <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView5"/>
     </LinearLayout>
 
 </FrameLayout>

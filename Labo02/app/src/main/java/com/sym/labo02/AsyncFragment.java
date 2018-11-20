@@ -17,6 +17,7 @@ package com.sym.labo02;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -27,7 +28,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.internal.framed.Header;
+
+import java.io.IOException;
+import java.util.Map;
 
 
 /**
@@ -41,8 +48,8 @@ import com.squareup.okhttp.Response;
 public class AsyncFragment extends Fragment {
 
     //We use a SymComManager to interact with the server
-    private SymComManager scm;
-    private String postRequestURL = "http://sym.iict.ch/rest/txt";
+    protected SymComManager scm;
+    protected String postRequestURL = "http://sym.iict.ch/rest/txt";
 
     private EditText textToSend;
     private TextView response;
@@ -106,20 +113,42 @@ public class AsyncFragment extends Fragment {
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-
-                //When the button is clicked, a communication listener is set in order to display the server's answer
-                //in the response field
                 scm.setCommunicationEventListener(new CommunicationEventListener() {
-                        @Override
-                      public boolean handleServerResponse(String res) {
-                          response.setText(res);
-                          return false;
-                      }
-                  });
-                //once the listener is set, the request can be sent
-                scm.sendRequest(postRequestURL, textToSend.getText().toString());
+                    @Override
+                    public boolean handleServerResponse(String res) {
+                        response.setText(res);
+                        return true;
+                    }
+                });
+
+                AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>(){
+
+                    @Override
+                    protected String doInBackground(String... strings) {
+                        Request request = scm.createRequest(
+                                postRequestURL,
+                                scm.createHeader("text/plain", "text/plain"),
+                                scm.createTextBody(textToSend.getText().toString()));
+                        Response resp = scm.sendRequest(request);
+                        try {
+                            return resp.body().string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(String resp) {
+                        super.onPostExecute(resp);
+                        scm.getCommunicationEventListener().handleServerResponse(resp);
+                    }
+                };
+
+                asyncTask.execute();
             }
         });
+
         return view;
     }
 

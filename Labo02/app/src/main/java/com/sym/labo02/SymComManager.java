@@ -7,18 +7,26 @@
  *
  * Comments: The class must be a singleton to avoid creating many instances of okHttpClient
  *
- * Sources: http://www.vogella.com/tutorials/JavaLibrary-OkHttp/article.html
+ * Sources:
+ * http://www.vogella.com/tutorials/JavaLibrary-OkHttp/article.html
+ * https://stackoverflow.com/questions/40389163/check-internet-connection-okhttp
  */
 
 package com.sym.labo02;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import com.squareup.okhttp.*;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
 public class SymComManager {
 
     public static SymComManager instance = null;
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
     private CommunicationEventListener cel = null;
     private OkHttpClient client;
 
@@ -38,36 +46,59 @@ public class SymComManager {
         this.cel = cel;
     }
 
-    /**
-     * Create and send a post an asynchronous request to the server
-     * @param url, server address
-     * @param req, string, content of the post request
-     */
-    void sendRequest(String url, final String req){
-        //creating the body of the request
-        RequestBody postBody = new FormEncodingBuilder()
-                .add("text", req)
-                .build();
+    public Headers createHeader(String textContent, String accept){
+        Headers.Builder header = new Headers.Builder();
+        header.add("content-type", textContent)
+                .add("accept", accept);
+        return header.build();
+    }
 
+    public Request createRequest(String url, Headers headers, RequestBody rb){
         //creating the request
         Request request = new Request.Builder()
                 .url(url)
-                .post(postBody)
-                .addHeader("Content-Type", "text/plain")
+                .post(rb)
+                .headers(headers)
                 .build();
 
-        //sending the request. We enqueue a callback in order to treat separatly the server answer
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                e.printStackTrace();
-            }
+        return request;
+    }
 
-            @Override
-            public void onResponse(Response res) throws IOException {
-                //if the request leads to a success, the Commnunication Event Listener handle the answer
-                cel.handleServerResponse(res.body().string());
-            }
-        });
+    public RequestBody createTextBody(String req){
+        RequestBody reqBody = new FormEncodingBuilder()
+                .add("text", req)
+                .build();
+        return  reqBody;
+    }
+
+    public RequestBody createJsonBody(JSONObject json){
+        RequestBody reqBody = RequestBody.create(JSON,json.toString());
+        return reqBody;
+    }
+
+    /**
+     */
+    public Response sendRequest(Request request){
+
+        try {
+            return client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public CommunicationEventListener getCommunicationEventListener(){
+        return cel;
+    }
+
+    public static boolean isNetworkAvailable(final Context context) {
+        final ConnectivityManager cm = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) return false;
+        final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        // if no network is available networkInfo will be null
+        // otherwise check if we are connected
+        return (networkInfo != null && networkInfo.isConnected());
     }
 }

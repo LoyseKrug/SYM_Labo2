@@ -1,12 +1,37 @@
+/**
+ * Authors: Adrien Allemand, James Smith, Loyse Krug
+ *
+ * Date:
+ *
+ * Objective: -
+ *
+ * Comments: -
+ *
+ * Sources: https://www.baeldung.com/guide-to-okhttp
+ *
+ */
+
+
 package com.sym.labo02;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
@@ -18,6 +43,15 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class DiffereFragment extends AsyncFragment {
+
+    private EditText textToSend = null;
+    private TextView logs = null;
+    private Button sendButton = null;
+    private TextView response = null;
+
+    private boolean requestSent = false;
+    private ArrayList<String> logList = new ArrayList<String>();
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     //private static final String ARG_PARAM1 = "param1";
@@ -36,9 +70,6 @@ public class DiffereFragment extends AsyncFragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment DiffereFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -64,7 +95,75 @@ public class DiffereFragment extends AsyncFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_differe, container, false);
+        View view = inflater.inflate(R.layout.fragment_differe, container, false);
+
+        textToSend = (EditText) view.findViewById(R.id.sendTextfield);
+        logs  = (TextView) view.findViewById(R.id.logsDisplayer);
+        response = (TextView) view.findViewById(R.id.responseDisplayer);
+        sendButton = (Button) view.findViewById(R.id.sendBtn);
+
+        logs.setMovementMethod(new ScrollingMovementMethod());
+        response.setMovementMethod(new ScrollingMovementMethod());
+
+        sendButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                response.setText("");
+                addLog();
+                AsyncTask<String, Void, Void> asyncTask = new AsyncTask<String, Void, Void>(){
+
+                    @Override
+                    protected Void doInBackground(String... strings) {
+                        while(requestSent == false){
+                            if(SymComManager.isNetworkAvailable(getActivity().getApplicationContext())){
+
+                                for(String s : logList){
+                                    Request req = scm.createRequest(
+                                            postRequestURL,
+                                            scm.createHeader("text/plain", "text/plain"),
+                                            scm.createTextBody(s));
+                                    Response resp = scm.sendRequest(req);
+                                    try {
+                                        response.setText(response.getText().toString() + resp.body().string());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                emptyLogList();
+                                requestSent = true;
+                            } else {
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        return null;
+                    }
+
+                };
+                asyncTask.execute();
+
+            }
+        });
+
+        return view;
+    }
+
+    private void addLog(){
+        String text = textToSend.getText().toString();
+        if(!text.isEmpty() && !text.equals("")){
+            requestSent = false;
+            logList.add(text);
+            logs.setText(logs.getText().toString() + "\n" + text);
+
+        }
+    }
+
+    private void emptyLogList(){
+        logs.setText("");
+        logList.clear();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
