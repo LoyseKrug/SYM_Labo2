@@ -17,7 +17,6 @@ package com.sym.labo02.FragmentManagers;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -27,13 +26,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import com.sym.labo02.CommunicationEventListener;
 import com.sym.labo02.R;
-import com.sym.labo02.SymComManager;
-
-import java.io.IOException;
+import com.sym.labo02.Services.AsyncSendRequest;
 
 
 /**
@@ -46,27 +41,16 @@ import java.io.IOException;
  */
 public class AsyncFragment extends Fragment {
 
-    //We use a SymComManager to interact with the server
-    protected SymComManager scm;
-    protected String postRequestURL = "http://sym.iict.ch/rest/txt";
+    private AsyncSendRequest asr;
 
     private EditText textToSend;
     private TextView response;
     private Button sendButton;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    //private static final String ARG_PARAM1 = "param1";
-    //private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    //private String mParam1;
-    //private String mParam2;
-
     private OnFragmentInteractionListener mListener;
 
     public AsyncFragment() {
-        scm = SymComManager.getInstance();
+        asr = new AsyncSendRequest();
         // Required empty public constructor
     }
 
@@ -108,57 +92,28 @@ public class AsyncFragment extends Fragment {
         //As the answer can be longer than the text view, this field must be scrollable
         response.setMovementMethod(new ScrollingMovementMethod());
 
+        asr.setCommunicationEventListener(new CommunicationEventListener() {
+            @Override
+            public boolean handleServerResponse(String res) {
+                response.setText(res);
+                return true;
+            }
+        });
+
 
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                scm.setCommunicationEventListener(new CommunicationEventListener() {
-                    @Override
-                    public boolean handleServerResponse(String res) {
-                        response.setText(res);
-                        return true;
-                    }
-                });
-
-                AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>(){
-
-                    @Override
-                    protected String doInBackground(String... strings) {
-                        Request request = scm.createRequest(
-                                postRequestURL,
-                                scm.createHeader("text/plain", "text/plain"),
-                                scm.createTextBody(textToSend.getText().toString()));
-                        Response resp = scm.sendRequest(request);
-                        try {
-                            return resp.body().string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(String resp) {
-                        super.onPostExecute(resp);
-                        scm.getCommunicationEventListener().handleServerResponse(resp);
-                    }
-                };
-
-                asyncTask.execute();
+                try {
+                    asr.sendRequest(textToSend.getText().toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         return view;
     }
-
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
 
 
     @Override

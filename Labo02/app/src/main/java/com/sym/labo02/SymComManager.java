@@ -71,10 +71,7 @@ public class SymComManager {
         return  reqBody;
     }
 
-    public RequestBody createJsonBody(JSONObject json){
-        RequestBody reqBody = RequestBody.create(JSON,json.toString());
-        return reqBody;
-    }
+
 
     /**
      */
@@ -92,13 +89,4 @@ public class SymComManager {
         return cel;
     }
 
-    public static boolean isNetworkAvailable(final Context context) {
-        final ConnectivityManager cm = (ConnectivityManager)
-                context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm == null) return false;
-        final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        // if no network is available networkInfo will be null
-        // otherwise check if we are connected
-        return (networkInfo != null && networkInfo.isConnected());
-    }
 }

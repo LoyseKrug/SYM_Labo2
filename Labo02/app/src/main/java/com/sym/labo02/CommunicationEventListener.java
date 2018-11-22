@@ -12,6 +12,8 @@
 
 package com.sym.labo02;
 
+import android.widget.TextView;
+
 public interface CommunicationEventListener {
 
     public boolean handleServerResponse(String response);

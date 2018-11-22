@@ -14,6 +14,9 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.sym.labo02.CommunicationEventListener;
 import com.sym.labo02.R;
+import com.sym.labo02.Services.JSONService;
+import com.sym.labo02.Services.XMLService;
+import com.sym.labo02.SymComManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,6 +33,9 @@ import java.io.IOException;
  */
 public class SerializationFragment extends AsyncFragment {
 
+    private JSONService jsonService = null;
+    private XMLService xmlService = null;
+
     private EditText firstName = null;
     private EditText lastName = null;
     private EditText middleName = null;
@@ -38,9 +44,6 @@ public class SerializationFragment extends AsyncFragment {
     private Button sendJSON = null;
     private Button sendXML = null;
     private TextView response = null;
-
-    protected String jsonURL = "http://sym.iict.ch/rest/json";
-    private String xmlURL = "http://sym.iict.ch/rest/xml";
 
     private static final String[] genders = {"Male", "Female"};
 
@@ -100,40 +103,21 @@ public class SerializationFragment extends AsyncFragment {
             @Override
             public void onClick(View view) {
                 if(checkEntries()){
-                    scm.setCommunicationEventListener(new CommunicationEventListener() {
-                        @Override
-                        public boolean handleServerResponse(String res) {
-                            response.setText(res);
-                            return true;
-                        }
-                    });
-
-                    AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>(){
-                        @Override
-                        protected String doInBackground(String... strings) {
-                            JSONObject toSend = formatToJSON();
-                            Headers.Builder header = new Headers.Builder();
-                            header.add("content-type", "application/json")
-                                    .add("accept","application/json");
-                            Headers h = header.build();
-                            Request request = scm.createRequest( jsonURL, h ,scm.createJsonBody(toSend));
-                            Response resp = scm.sendRequest(request);
-                            try {
-                                return resp.body().string();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                    if(jsonService == null){
+                        jsonService = new JSONService();
+                        jsonService.setCommunicationEventListener(new CommunicationEventListener() {
+                            @Override
+                            public boolean handleServerResponse(String res) {
+                                response.setText(res);
+                                return true;
                             }
-                            return null;
-                        }
-
-                        @Override
-                        protected void onPostExecute(String resp) {
-                            super.onPostExecute(resp);
-                            scm.getCommunicationEventListener().handleServerResponse(resp);
-                        }
-                    };
-                    asyncTask.execute();
-
+                        });
+                    }
+                    jsonService.sendJSON( firstName.getText().toString(),
+                            lastName.getText().toString(),
+                            middleName.getText().toString(),
+                            gender.getSelectedItem().toString(),
+                            Integer.parseInt(phoneNumber.getText().toString()));
                 }
             }
         });
@@ -145,7 +129,8 @@ public class SerializationFragment extends AsyncFragment {
             @Override
             public void onClick(View view) {
                 if(checkEntries()){
-                    scm.setCommunicationEventListener(new CommunicationEventListener() {
+                    xmlService = new XMLService();
+                    xmlService.setCommunicationEventListener(new CommunicationEventListener() {
                         @Override
                         public boolean handleServerResponse(String res) {
                             response.setText(res);
@@ -153,30 +138,12 @@ public class SerializationFragment extends AsyncFragment {
                         }
                     });
 
-                    AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>(){
-                        @Override
-                        protected String doInBackground(String... strings) {
-                            String toSend = formatToXML();
-                            Request request = scm.createRequest(
-                                    xmlURL,
-                                    scm.createHeader("application/xml", "application/xml") ,
-                                    scm.createTextBody(toSend));
-                            Response resp = scm.sendRequest(request);
-                            try {
-                                return resp.body().string();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            return null;
-                        }
+                    xmlService.sendXML( firstName.getText().toString(),
+                            lastName.getText().toString(),
+                            middleName.getText().toString(),
+                            gender.getSelectedItem().toString(),
+                            phoneNumber.getText().toString());
 
-                        @Override
-                        protected void onPostExecute(String resp) {
-                            super.onPostExecute(resp);
-                            scm.getCommunicationEventListener().handleServerResponse(resp);
-                        }
-                    };
-                    asyncTask.execute();
 
                 }
             }
@@ -205,35 +172,6 @@ public class SerializationFragment extends AsyncFragment {
             }
         }
         return isValid;
-    }
-
-    protected JSONObject formatToJSON() {
-        // create your json here
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("firstName", firstName.getText().toString());
-            jsonObject.put("lastName", lastName.getText().toString());
-            jsonObject.put("middleName", middleName.getText().toString());
-            jsonObject.put("gender", gender.getSelectedItem().toString());
-            jsonObject.put("phone", Integer.parseInt(phoneNumber.getText().toString()));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
-    private String formatToXML() {
-        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<!DOCTYPE directory SYSTEM \"http://sym.iict.ch/directory.dtd\">\n" +
-                "<directory>";
-        xml += "\n<person>";
-        xml += "\n<name>" + lastName.getText().toString() + "</name>" +
-                "\n<firstname>" + firstName.getText().toString() + "</firstname>" +
-                "\n<middlename>" + middleName.getText().toString() + "</middlename>" +
-                "\n<gender>" + gender.getSelectedItem().toString() + "</gender>" +
-                "\n<phone type=\"home\">" + phoneNumber.getText().toString() + "</phone>";
-        xml += "\n</person>\n</directory>";
-        return null;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
