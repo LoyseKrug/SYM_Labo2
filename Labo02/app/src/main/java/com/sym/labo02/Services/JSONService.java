@@ -27,17 +27,25 @@ public class JSONService {
 
 
     public JSONService(){
-        scm = SymComManager.getInstance();
-        postRequestURL = "http://sym.iict.ch/rest/json";
+        this("http://sym.iict.ch/rest/json");
     }
 
-    public void sendJSON(String fn, String ln, String mn, String g, int p){
+    protected JSONService(String url){
+        scm = SymComManager.getInstance();
+        postRequestURL = url;
+    }
+
+    public void sendData(String fn, String ln, String mn, String g, int p){
         firstName = fn;
         lastName = ln;
         middleName = mn;
         gender = g;
         phoneNumber = p;
 
+        sendJSON();
+    }
+
+    protected void sendJSON(){
         AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>(){
             @Override
             protected String doInBackground(String... strings) {

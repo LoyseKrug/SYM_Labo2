@@ -11,10 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.sym.labo02.FragmentManagers.AsyncFragment;
-import com.sym.labo02.FragmentManagers.CompressedFragment;
-import com.sym.labo02.FragmentManagers.DiffereFragment;
-import com.sym.labo02.FragmentManagers.SerializationFragment;
+import com.sym.labo02.FragmentManagers.*;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AsyncFragment.OnFragmentInteractionListener {
@@ -99,7 +96,8 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
         } else if (id == R.id.nav_graphql) {
             toolbar.setTitle("GraphQL");
-            // TODO
+            GraphQLFragment fragment = GraphQLFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
         } else if (id == R.id.nav_serialization) {
             toolbar.setTitle("Sérialisé");
             SerializationFragment fragment = SerializationFragment.newInstance();
