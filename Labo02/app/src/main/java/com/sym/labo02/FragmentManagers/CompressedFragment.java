@@ -80,7 +80,9 @@ public class CompressedFragment extends AsyncFragment {
             @Override
             public void onClick(View view){
                 try {
-                    cs.sendRequest(textToSend.getText().toString());
+                    if(!textToSend.getText().toString().isEmpty()){
+                        cs.sendRequest(textToSend.getText().toString());
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

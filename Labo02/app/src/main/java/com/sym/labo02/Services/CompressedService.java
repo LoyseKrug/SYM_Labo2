@@ -1,6 +1,6 @@
 /**
- * Source: https://www.programcreek.com/java-api-examples/?class=java.util.zip.DeflaterOutputStream&method=finish
- * Exemple 18
+ * Source: https://www.programcreek.com/java-api-examples/java.util.zip.DeflaterOutputStream
+ * Exemple 12
  */
 
 package com.sym.labo02.Services;
@@ -10,49 +10,55 @@ import com.squareup.okhttp.*;
 import com.sym.labo02.CommunicationEventListener;
 import com.sym.labo02.SymComManager;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
-import java.util.zip.InflaterInputStream;
+import java.util.zip.Inflater;
 
-public class CompressedService{
+public class CompressedService {
 
     private SymComManager scm;
     private String postRequestURL;
     private String request;
 
 
-    public CompressedService(){
+    public CompressedService() {
         scm = SymComManager.getInstance();
         postRequestURL = "http://sym.iict.ch/rest/txt";
     }
 
 
-    public void sendRequest(String req) throws Exception{
+    public void sendRequest(String req) throws Exception {
 
         request = req;
 
-        AsyncTask<String, Void, byte[]> asyncTask = new AsyncTask<String, Void, byte[]>(){
+        AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>() {
 
             @Override
-            protected byte[] doInBackground(String... strings) {
+            protected String doInBackground(String... strings) {
 
-                RequestBody rb = RequestBody.create(MediaType.parse("text/plain"), compressData(request));
+                RequestBody rb = RequestBody.create(MediaType.parse("text/plain; charset=uft-8"), compressData(request));
 
                 Headers.Builder header = new Headers.Builder();
-                header.add("content-type", "application/json")
-                        .add("accept", "application/json")
-                        .add("XNetwork" ,"CSD")
-                        .add("X-Content-Encoding", "defalte");
+                header.add("content-type", "plain/text")
+                       // .add("accept", "text/plain")
+                        .add("X-Network", "CSD")
+                        .add("X-Content-Encoding", "deflate");
+                Headers h = header.build();
                 Request req = scm.createRequest(
                         postRequestURL,
-                        scm.createHeader("text/plain", "text/plain"),
+                        h,
                         rb);
                 Response resp = scm.sendRequest(req);
+                if (resp.isSuccessful() && resp.body() != null) {
+
+                } else { // la réponse n'est pas valide
+                    System.out.println(resp);
+                }
                 try {
-                    return resp.body().bytes();
+                    return decompressData(resp.body().bytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -60,37 +66,38 @@ public class CompressedService{
             }
 
             @Override
-            protected void onPostExecute(byte[] resp) {
+            protected void onPostExecute(String resp) {
                 super.onPostExecute(resp);
 
-                scm.getCommunicationEventListener().handleServerResponse(decompressData(resp));
+                scm.getCommunicationEventListener().handleServerResponse(resp);
                 //scm.getCommunicationEventListener().handleServerResponse(resp.toString());
             }
         };
         asyncTask.execute();
     }
 
-    public void setCommunicationEventListener (CommunicationEventListener l){
+    public void setCommunicationEventListener(CommunicationEventListener l) {
         scm.setCommunicationEventListener(l);
     }
 
 
-    public byte[] compressData(String toCompress){
-        ByteArrayOutputStream ba = new ByteArrayOutputStream(toCompress.length()); // * 2 + 20
-        DeflaterOutputStream out = new DeflaterOutputStream(ba);
-        byte[] bytes = toCompress.getBytes(Charset.forName("UTF-8"));
+    public byte[] compressData(String toCompress) {
+        Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION, true);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DeflaterOutputStream dos = new DeflaterOutputStream(byteArrayOutputStream, deflater);
         try {
-            out.write(bytes);
-            out.finish();
-            out.flush();
+            dos.write(toCompress.getBytes());
+            dos.finish();
+            dos.close();
+            deflater.end();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        byte[] compressed = ba.toByteArray();
-        return compressed;
+        return byteArrayOutputStream.toByteArray();
     }
 
     public static String decompressData(final byte[] bytes) {
+        /*
         final ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final byte[] buf = new byte[bytes.length];
@@ -104,11 +111,30 @@ public class CompressedService{
         } catch (final Exception e) {
             return null;
         }
+        */
+
+        byte[] body = bytes;
+        Inflater inflater = new Inflater(true);
+        inflater.setInput(body);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream(body.length);
+
+        byte[] buffer = new byte[body.length];
+        while (!inflater.finished()) {
+            int count = 0;
+            try {
+                count = inflater.inflate(buffer);
+            } catch (DataFormatException e) {
+                e.printStackTrace();
+            }
+            stream.write(buffer, 0, count);
+        }
+        try {
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stream.toString();
     }
-
-
-
-
 
 
 }
