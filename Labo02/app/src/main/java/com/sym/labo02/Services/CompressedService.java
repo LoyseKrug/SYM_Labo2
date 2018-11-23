@@ -51,7 +51,6 @@ public class CompressedService {
                         postRequestURL,
                         h,
                         rb);
-                Response resp = scm.sendRequest(req);
                 try {
                     Response resp = scm.sendRequest(req);
                     return decompressData(resp.body().bytes());
