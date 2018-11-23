@@ -52,17 +52,13 @@ public class CompressedService {
                         h,
                         rb);
                 Response resp = scm.sendRequest(req);
-                if (resp.isSuccessful() && resp.body() != null) {
-
-                } else { // la réponse n'est pas valide
-                    System.out.println(resp);
-                }
                 try {
+                    Response resp = scm.sendRequest(req);
                     return decompressData(resp.body().bytes());
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return null;
                 }
-                return null;
             }
 
             @Override

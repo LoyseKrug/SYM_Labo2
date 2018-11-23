@@ -54,8 +54,8 @@ public class DiffereService {
                                     postRequestURL,
                                     scm.createHeader("text/plain", "text/plain"),
                                     scm.createTextBody(s));
-                            Response resp = scm.sendRequest(req);
                             try {
+                                Response resp = scm.sendRequest(req);
                                 response.setText(response.getText().toString() + resp.body().string());
                             } catch (IOException e) {
                                 e.printStackTrace();

@@ -33,13 +33,13 @@ public class AsyncSendRequest {
                         postRequestURL,
                         scm.createHeader("text/plain", "text/plain"),
                         scm.createTextBody(request));
-                Response resp = scm.sendRequest(req);
                 try {
+                    Response resp = scm.sendRequest(req);
                     return resp.body().string();
-                } catch (IOException e) {
+                } catch (IOException | RuntimeException e) {
                     e.printStackTrace();
+                    return e.getMessage();
                 }
-                return null;
             }
 
             @Override
