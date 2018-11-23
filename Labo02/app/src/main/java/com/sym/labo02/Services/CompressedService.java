@@ -1,4 +1,13 @@
 /**
+ * Authors: Adrien Allemand, James Smith, Loyse Krug
+ *
+ * Date: 25.11.2018
+ *
+ * Objective: This class offer methods to send a compressed request to the server using an AsyncTask
+ * it also provide methods to compress and decompress a String
+ *
+ * Comments: -
+ *
  * Source: https://www.programcreek.com/java-api-examples/java.util.zip.DeflaterOutputStream
  * Exemple 12
  */
@@ -23,13 +32,20 @@ public class CompressedService {
     private String postRequestURL;
     private String request;
 
-
+    /**
+     * Empty Constructor
+     */
     public CompressedService() {
         scm = SymComManager.getInstance();
         postRequestURL = "http://sym.iict.ch/rest/txt";
     }
 
 
+    /**
+     * Send a request to the server
+     * @param req, String text of the request
+     * @throws Exception
+     */
     public void sendRequest(String req) throws Exception {
 
         request = req;
@@ -71,11 +87,20 @@ public class CompressedService {
         asyncTask.execute();
     }
 
+    /**
+     * Set the communication event listener
+     * @param l, communication Event Listener
+     */
     public void setCommunicationEventListener(CommunicationEventListener l) {
         scm.setCommunicationEventListener(l);
     }
 
 
+    /**
+     * Compress the datas
+     * @param toCompress, String containing the datas to compress
+     * @return a array of bytes containing the compressed data
+     */
     public byte[] compressData(String toCompress) {
         Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION, true);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -91,6 +116,11 @@ public class CompressedService {
         return byteArrayOutputStream.toByteArray();
     }
 
+    /**
+     * Decompress a compressed data
+     * @param bytes, data compressed
+     * @return a String with the decompressed data
+     */
     public static String decompressData(final byte[] bytes) {
         /*
         final ByteArrayInputStream bais = new ByteArrayInputStream(bytes);

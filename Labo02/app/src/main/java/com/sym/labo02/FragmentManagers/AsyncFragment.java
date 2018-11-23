@@ -1,13 +1,12 @@
 /**
  * Authors: Adrien Allemand, James Smith, Loyse Krug
  *
- * Date:
+ * Date: 25.11.2018
  *
  * Objective: This class manage the Async fragment of the app. In this fragment, the user is supposed to send a
  * text/plain post request to the server. The answer is displayed in the fragments response field.
  *
- * Comments: The class must be a singleton to avoid creating many instances of okHttpClient.
- * (plus, in ordre to connect to the server, an Android.permission.Internet has been added to the manifest)
+ * Comments: -
  *
  * Sources: -
  *

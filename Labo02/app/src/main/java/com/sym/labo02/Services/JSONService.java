@@ -1,5 +1,17 @@
-package com.sym.labo02.Services;
+/**
+ * Authors: Adrien Allemand, James Smith, Loyse Krug
+ *
+ * Date: 25.11.2018
+ *
+ * Objective: This class is used to format and send a request containing a json body
+ *
+ * Comments: -
+ *
+ * Sources: -
+ *
+ */
 
+package com.sym.labo02.Services;
 
 import android.os.AsyncTask;
 import com.squareup.okhttp.*;
@@ -25,16 +37,30 @@ public class JSONService {
     private int phoneNumber;
 
 
-
+    /**
+     * Empty Constructor
+     */
     public JSONService(){
         this("http://sym.iict.ch/rest/json");
     }
 
+    /**
+     * JSONService constructor
+     * @param url, url to where the request is sent
+     */
     protected JSONService(String url){
         scm = SymComManager.getInstance();
         postRequestURL = url;
     }
 
+    /**
+     * Method used to send data about a person to the server
+     * @param fn, firstName String
+     * @param ln lastName String
+     * @param mn middleName String
+     * @param g gender String
+     * @param p phone Number integer
+     */
     public void sendData(String fn, String ln, String mn, String g, int p){
         firstName = fn;
         lastName = ln;
@@ -45,7 +71,11 @@ public class JSONService {
         sendJSON();
     }
 
+    /**
+     * Method used to send datas to the server
+     */
     protected void sendJSON(){
+        //An AsyncTask is created to send the request to the server in background
         AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>(){
             @Override
             protected String doInBackground(String... strings) {
@@ -73,11 +103,20 @@ public class JSONService {
         asyncTask.execute();
     }
 
+    /**
+     * Create a JSON body from a JSONObject
+     * @param json, JSONObject
+     * @return the requestBody to provide to the request
+     */
     protected RequestBody createJsonBody(JSONObject json){
         RequestBody reqBody = RequestBody.create(JSON,json.toString());
         return reqBody;
     }
 
+    /**
+     * Create a JSONObject from the class attributes
+     * @return JSONObject
+     */
     protected JSONObject formatToJSON() {
 
         // create your json here
@@ -94,6 +133,10 @@ public class JSONService {
         return jsonObject;
     }
 
+    /**
+     * Set a CommunicationEventListener
+     * @param l communication Event Listener
+     */
     public void setCommunicationEventListener (CommunicationEventListener l){
         scm.setCommunicationEventListener(l);
     }

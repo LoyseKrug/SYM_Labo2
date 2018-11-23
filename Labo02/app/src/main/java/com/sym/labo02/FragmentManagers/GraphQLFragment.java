@@ -1,3 +1,16 @@
+/**
+ * Authors: Adrien Allemand, James Smith, Loyse Krug
+ *
+ * Date: 25.11.2018
+ *
+ * Objective: In this fragment, the user chose an author and the server return a text
+ *
+ * Comments:
+ *
+ * Sources: -
+ *
+ */
+
 package com.sym.labo02.FragmentManagers;
 
 import android.os.Bundle;

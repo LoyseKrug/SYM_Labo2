@@ -1,3 +1,18 @@
+/**
+ * Authors: Adrien Allemand, James Smith, Loyse Krug
+ *
+ * Date: 25.11.2018
+ *
+ * Objective: In this fragment the user will be able to send requests, the request will be compressed before it is sent
+ * to the server, the server will answer in a compressed format and the answer will be decompressed before beeing
+ * displayed
+ *
+ * Comments: .
+ *
+ * Sources: -
+ *
+ */
+
 package com.sym.labo02.FragmentManagers;
 
 import android.content.Context;

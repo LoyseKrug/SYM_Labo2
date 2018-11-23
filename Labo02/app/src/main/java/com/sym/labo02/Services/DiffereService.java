@@ -1,3 +1,18 @@
+/**
+ * Authors: Adrien Allemand, James Smith, Loyse Krug
+ *
+ * Date: 25.11.2018
+ *
+ * Objective: This class offer methods to send a request to the server and keep a list of the
+ * request waiting for a connexion to the network. The list of waiting requests is stocked
+ * in an ArrayList and shown to the user through a TextView
+ *
+ * Comments: -
+ *
+ * Sources: -
+ *
+ */
+
 package com.sym.labo02.Services;
 
 import android.content.Context;
@@ -8,7 +23,6 @@ import android.widget.TextView;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.sym.labo02.SymComManager;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -23,9 +37,9 @@ public class DiffereService {
     private TextView logs = null;
     private String entry;
 
-
-
-
+    /**
+     * Empty Constructor
+     */
     public DiffereService(){
         scm = SymComManager.getInstance();
         logList = new ArrayList<String>();
@@ -33,6 +47,13 @@ public class DiffereService {
         requestSent = false;
     }
 
+    /**
+     * Method trying to send a request to the server
+     * @param e, entry containting the text of the request to send
+     * @param c, context of the activité
+     * @param r, textView that will contain the server's answer
+     * @param l, textView that will contain all the entered logs from the last connexion to the server
+     */
     public void sentRequest(String e, Context c, TextView r, TextView l){
         logs = l;
         context = c;
@@ -78,6 +99,11 @@ public class DiffereService {
         asyncTask.execute();
     }
 
+    /**
+     * add a log to the list of logs waiting for a connexion to the server
+     * @param entry, text of the request added to the log list
+     * @param l, TextView where the logs are displayed
+     */
     private void addLog(String entry, TextView l){
         String text = entry;
         if(!text.isEmpty() && !text.equals("")){
@@ -88,18 +114,26 @@ public class DiffereService {
         }
     }
 
+    /**
+     * Empty the list of logs
+     * @param l, update the textView displaying the list of logs
+     */
     private void emptyLogList(TextView l){
         logs.setText("");
         logList.clear();
     }
 
+
+    /**
+     * Test the connexion to the server
+     * @param context Context of the current activity
+     * @return wether the connexion was successful or not
+     */
     private static boolean isNetworkAvailable(final Context context) {
         final ConnectivityManager cm = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm == null) return false;
         final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        // if no network is available networkInfo will be null
-        // otherwise check if we are connected
         return (networkInfo != null && networkInfo.isConnected());
     }
 

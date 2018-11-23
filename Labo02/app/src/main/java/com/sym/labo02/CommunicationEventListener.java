@@ -12,10 +12,13 @@
 
 package com.sym.labo02;
 
-import android.widget.TextView;
-
 public interface CommunicationEventListener {
 
-    public boolean handleServerResponse(String response);
+    /**
+     * Method implementing the action taken when the server answer is recieved
+     * @param response, response recieved from the server
+     * @return whether the server has answered or not
+     */
+    boolean handleServerResponse(String response);
 
 }

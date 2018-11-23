@@ -1,3 +1,16 @@
+/**
+ * Authors: Adrien Allemand, James Smith, Loyse Krug
+ *
+ * Date: 25.11.2018
+ *
+ * Objective: In this fragment, the user can sent data in json or xml format
+ *
+ * Comments:
+ *
+ * Sources: -
+ *
+ */
+
 package com.sym.labo02.FragmentManagers;
 
 import android.content.Context;
@@ -142,7 +155,10 @@ public class SerializationFragment extends AsyncFragment {
     }
 
 
-
+    /**
+     * Check if the must set values have been entered in the fragment fields
+     * @return wether the must set fields have been set
+     */
     private boolean checkEntries() {
         boolean isValid = false;
         if (firstName.getText().toString().isEmpty() || firstName.getText().toString().equals("")

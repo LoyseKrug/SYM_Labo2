@@ -1,3 +1,16 @@
+/**
+ * Authors: Adrien Allemand, James Smith, Loyse Krug
+ *
+ * Date: 25.11.2018
+ *
+ * Objective: class representing the Main Activity
+ *
+ * Comments: -
+ *
+ * Sources: -
+ *
+ */
+
 package com.sym.labo02;
 
 import android.net.Uri;

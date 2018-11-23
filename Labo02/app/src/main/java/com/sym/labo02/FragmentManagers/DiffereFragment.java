@@ -1,9 +1,10 @@
 /**
  * Authors: Adrien Allemand, James Smith, Loyse Krug
  *
- * Date:
+ * Date: 25.11.2018
  *
- * Objective: -
+ * Objective: In this fragment the user will be able to send requests, and if no connexion with the network is found
+ * the request is saved in the memory. When the connexion if back, all the requests saved are sent one after the other
  *
  * Comments: -
  *
