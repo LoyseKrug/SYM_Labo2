@@ -50,13 +50,13 @@ public class CompressedService{
                         postRequestURL,
                         scm.createHeader("text/plain", "text/plain"),
                         rb);
-                Response resp = scm.sendRequest(req);
                 try {
+                    Response resp = scm.sendRequest(req);
                     return resp.body().bytes();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return null;
                 }
-                return null;
             }
 
             @Override

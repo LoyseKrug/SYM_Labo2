@@ -57,13 +57,13 @@ public class XMLService{
                         postRequestURL,
                         scm.createHeader("application/xml", "application/xml") ,
                         body);
-                Response resp = scm.sendRequest(request);
                 try {
+                    Response resp = scm.sendRequest(request);
                     return resp.body().string();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                return null;
+                return "Error in request";
             }
 
             @Override

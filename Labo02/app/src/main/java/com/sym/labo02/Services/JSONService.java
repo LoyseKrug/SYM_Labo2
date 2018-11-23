@@ -55,8 +55,8 @@ public class JSONService {
                         .add("accept","application/json");
                 Headers h = header.build();
                 Request request = scm.createRequest( postRequestURL, h ,createJsonBody(toSend));
-                Response resp = scm.sendRequest(request);
                 try {
+                    Response resp = scm.sendRequest(request);
                     return resp.body().string();
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -75,14 +75,8 @@ public class SymComManager {
 
     /**
      */
-    public Response sendRequest(Request request){
-
-        try {
-            return client.newCall(request).execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public Response sendRequest(Request request) throws IOException{
+        return client.newCall(request).execute();
     }
 
     public CommunicationEventListener getCommunicationEventListener(){
