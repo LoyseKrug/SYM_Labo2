@@ -2,25 +2,16 @@ package com.sym.labo02.FragmentManagers;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import com.sym.labo02.CommunicationEventListener;
 import com.sym.labo02.R;
 import com.sym.labo02.Services.JSONService;
 import com.sym.labo02.Services.XMLService;
-import com.sym.labo02.SymComManager;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 
 
 /**
@@ -50,7 +41,6 @@ public class SerializationFragment extends AsyncFragment {
     private OnFragmentInteractionListener mListener;
 
     public SerializationFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -58,7 +48,6 @@ public class SerializationFragment extends AsyncFragment {
      * this fragment using the provided parameters.
      * @return A new instance of fragment DiffereFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SerializationFragment newInstance() {
         SerializationFragment fragment = new SerializationFragment();
         Bundle args = new Bundle();
@@ -113,7 +102,7 @@ public class SerializationFragment extends AsyncFragment {
                             }
                         });
                     }
-                    jsonService.sendJSON( firstName.getText().toString(),
+                    jsonService.sendData(firstName.getText().toString(),
                             lastName.getText().toString(),
                             middleName.getText().toString(),
                             gender.getSelectedItem().toString(),
