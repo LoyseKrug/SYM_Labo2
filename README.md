@@ -1,5 +1,7 @@
 # SYM Labo 2
 
+Auteurs: Adrien Allemand, James Smith et Loyse Krug
+
 ## Transmission différée
 
 ```
@@ -18,7 +20,7 @@ Les interfaces AsyncSendRequest et CommunicationEventListener utilisées au poin
 
 Si une erreur se produit durant la communication avec le serveur, il y a une levée d'exception. Celle-ci est ensuite géré par le thread AsynchTask et gère le problème, l'affiche, l'ignore etc.
 
-// A compléter
+Actuellement, l'erreur de connextion est traîtée dans chaque service séparément. Il serait plus propre d'ajouter une fonction qui traîte les cas d'erreur à l'interface CommunicationEventListener.  
 
 ### 2 Authentification
 
@@ -29,7 +31,7 @@ Si une authentification par le serveur est requise, peut-on utiliser un protocol
 Non, on ne veut pas laisser l'utilisateur accéder à l'application alors qu'on a pas la validation de son identité. Tant que l'application nécessite une authentification serveur, il faut attendre la réponse du serveur avant de pouvoir continuer.
 Une transmission différée n'est pas valide pour les mêmes raisons.
 
-La seul raison pour laquelle une authentification asynchrone serait possible est si l'application possèdes des foncitonnalités nécessitant pas d'autorisation et que pendant la durée de l'authentification, on peut laisser l'utilisateur utiliser les fonctionnalités nécessaitant pas d'autorisation uniquement.
+La seul raison pour laquelle une authentification asynchrone serait possible est si l'application possèdes des foncitonnalités ne nécessitant pas d'autorisation et que pendant la durée de l'authentification, on peut laisser l'utilisateur utiliser les fonctionnalités nécessaitant pas d'autorisation uniquement.
 
 ### 3 Threads concurrents
 
@@ -79,7 +81,7 @@ On peut plus facilement faire des erreurs, moins réutilisable. Nécessite de fa
 Est-ce qu’il y a en revanche des avantages que vous pouvez citer ?
 ```
 
-Plus lisible, plus facile à implémenter. Très pratique couplé à des db comme mango (Schemaless). Liasse plus de flexibilité.
+Plus lisible, plus facile à implémenter. Très pratique couplé à des db comme mango (Schemaless). Laisse plus de flexibilité.
 
 ```
 L’utilisation d’un mécanisme comme Protocol Buffers 8 est-elle compatible avec une
@@ -87,7 +89,7 @@ architecture basée sur HTTP ? Veuillez discuter des éventuelles avantages ou l
 ```
 
 Oui, Protocole Buffer est compatile avec une architecture basé sur HTTP.
-C'est flexible, léger, et permet une validation comme la DTD de XML. Mais dès que les données sont sérialiser, elles sont transformé en binaire et donc illisible à l'oeil humain. Peut être problèmatique pour des phases de debug.
+C'est flexible, léger, et permet une validation comme la DTD de XML. Mais dès que les données sont sérialisées, elles sont transformée en binaire et donc illisible à l'oeil humain. Peut être problèmatique pour des phases de debug.
 
 ```
 Par rapport à l’API GraphQL mise à disposition pour ce laboratoire. Avez-vous constaté des points qui pourraient être améliorés pour une utilisation mobile ? Veuillez en discuter, vous pouvez élargir votre réflexion à une problématique plus large que la manipulation effectuée.
@@ -101,8 +103,24 @@ Il n'y a pas de système de pagination mise en place. Peut poser problème si un
 Quel gain peut-on constater en moyenne sur des fichiers texte (xml et json sont aussi du texte) en utilisant de la compression du point 3.4 ? Vous comparerez vos résultats par rapport au gain théorique d’une compression DEFLATE, vous enverrez aussi plusieurs tailles de contenu pour comparer.
 ```
 
-// TODO
+| Taille de la requête, nombre de caractères | temps requête simple [ms] | temps requête compressée [ms] | taille de la chaine compressée | rapport de taille compressée/taille non compressée [%] |
+| :----------------------------------------: | :-----------------------: | :---------------------------: | ------------------------------ | ------------------------------------------------------ |
+|                     1                      |            182            |              161              | 3                              | 300%                                                   |
+|                     50                     |            157            |              190              | 52                             | 104%                                                   |
+|                    500                     |            100            |              193              | 402                            | 80%                                                    |
+|                    5000                    |            147            |              186              | 3'772                          | 75%                                                    |
+|                   50'000                   |            313            |              211              | 37'591                         | 75%                                                    |
+|                  500'000                   |          timeout          |              281              | 75'186                         | 15%                                                    |
 
-## Remarques
+Pour comparer le temps d'envoi des requêtes entre des requêtes simples et des requêtes compressées, nous avons ajouté un timer avant et après chacune des deux requêtes et envoyé des requêtes de taille variable. Pour être plus juste dans nos comparaisons, nous avons ajouté l'entête X-Network= CSD aux requêtes asynchrones simples. 
 
-Ces questions sont très penible et sort en grande partie du context de ce labo...
+Nous avons également calculé la taille des chaines de caractère avant et après compression.
+
+Les résultats des nos essais sont affichés dans le tableau ci-dessus, nous constatons que pour les petites requêtes les temps donnent des résultats très flucutant. En revanche , des requêtes de 50'000 caractères. on remarque que le temps des requêtes compressées est plus court que celui des requêtes compressées. Enfin, nous constatons que du côté des requêtes simples, on se retourve face à un timeout dès 500'000 caractères, alors que pour les requêtes compressées on peut encore envoyer des requêtes à ce stade.
+
+Ces résultats doivent être pris avec des pincettes, surtout pour les plus courtes requêtes, car les fluctuations du réseau influencent grandement les temps obtenus. 
+
+En ce qui concerne les longueur des requêtes envoyées au serveur, nous constatons que le gain est de plus en plus élevé avec la taille de la requête qui augmente. Pour une requête d'un seul caractère, il est inutilse et même contre productif de compresser la requête, car l'algorithme de deflate stocke des informations supplémentaires pour pouvoir par la suite décompresser la chaîne de caractères. En revanche, on observe une diminution de la taille des données à envoyer à partir des chaines de 500 caractères et on remarque que pour 500'000 caractères, la requête compressée ne fait plus que 15% de sa taille de base. 
+
+
+

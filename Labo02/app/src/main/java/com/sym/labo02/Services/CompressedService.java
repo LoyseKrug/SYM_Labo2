@@ -9,7 +9,7 @@
  * Comments: -
  *
  * Source: https://www.programcreek.com/java-api-examples/java.util.zip.DeflaterOutputStream
- * Exemple 12
+ * https://www.programcreek.com/java-api-examples/index.php?api=java.util.zip.Inflater
  */
 
 package com.sym.labo02.Services;
@@ -54,12 +54,13 @@ public class CompressedService {
 
             @Override
             protected String doInBackground(String... strings) {
-
-                RequestBody rb = RequestBody.create(MediaType.parse("text/plain; charset=uft-8"), compressData(request));
+                byte[] compressedData = compressData(request);
+                //System.out.println("--------------------------------------------------------Compressed data length= " + compressedData.length);
+                RequestBody rb = RequestBody.create(MediaType.parse("text/plain; charset=uft-8"), compressedData);
 
                 Headers.Builder header = new Headers.Builder();
                 header.add("content-type", "plain/text")
-                       // .add("accept", "text/plain")
+                        .add("accept", "text/plain")
                         .add("X-Network", "CSD")
                         .add("X-Content-Encoding", "deflate");
                 Headers h = header.build();
@@ -68,7 +69,10 @@ public class CompressedService {
                         h,
                         rb);
                 try {
+                    //long beforeRequest = System.currentTimeMillis();
                     Response resp = scm.sendRequest(req);
+                    //long afterRequest = System.currentTimeMillis();
+                    //System.out.println("-------------------------------------------------------Request time = " + (afterRequest - beforeRequest) + " ms");
                     return decompressData(resp.body().bytes());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -122,32 +126,17 @@ public class CompressedService {
      * @return a String with the decompressed data
      */
     public static String decompressData(final byte[] bytes) {
-        /*
-        final ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final byte[] buf = new byte[bytes.length];
-        try (InflaterInputStream iis = new InflaterInputStream(bais)) {
-            int count = iis.read(buf);
-            while (count != -1) {
-                baos.write(buf, 0, count);
-                count = iis.read(buf);
-            }
-            return new String(baos.toByteArray(), Charset.forName("UTF-8"));
-        } catch (final Exception e) {
-            return null;
-        }
-        */
-
+        //We tried to use a InflaterInputStream, but the response couldn't be decompressed..
         byte[] body = bytes;
-        Inflater inflater = new Inflater(true);
-        inflater.setInput(body);
+        Inflater i = new Inflater(true);
+        i.setInput(body);
         ByteArrayOutputStream stream = new ByteArrayOutputStream(body.length);
 
         byte[] buffer = new byte[body.length];
-        while (!inflater.finished()) {
+        while (!i.finished()) {
             int count = 0;
             try {
-                count = inflater.inflate(buffer);
+                count = i.inflate(buffer);
             } catch (DataFormatException e) {
                 e.printStackTrace();
             }

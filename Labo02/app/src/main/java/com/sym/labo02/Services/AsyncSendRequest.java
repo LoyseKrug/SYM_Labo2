@@ -16,6 +16,7 @@
 package com.sym.labo02.Services;
 
 import android.os.AsyncTask;
+import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.sym.labo02.CommunicationEventListener;
@@ -51,12 +52,20 @@ public class AsyncSendRequest {
 
             @Override
             protected String doInBackground(String... strings) {
+                Headers.Builder header = new Headers.Builder();
+                header.add("content-type", "plain/text")
+                        .add("accept", "text/plain");
+                        //.add("X-Network", "CSD");
+                Headers h = header.build();
                 Request req = scm.createRequest(
                         postRequestURL,
-                        scm.createHeader("text/plain", "text/plain"),
+                        h,
                         scm.createTextBody(request));
                 try {
+                    //long beforeRequest = System.currentTimeMillis();
                     Response resp = scm.sendRequest(req);
+                    //long afterRequest = System.currentTimeMillis();
+                    //System.out.println("---------------------------------------------------Request time = " + (afterRequest - beforeRequest) + " ms");
                     return resp.body().string();
                 } catch (IOException | RuntimeException e) {
                     e.printStackTrace();

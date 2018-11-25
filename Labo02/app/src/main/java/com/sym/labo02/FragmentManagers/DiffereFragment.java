@@ -91,6 +91,7 @@ public class DiffereFragment extends AsyncFragment {
             @Override
             public void onClick(View view){
                 ds.sentRequest(textToSend.getText().toString(), getActivity().getBaseContext(), response, logs);
+                textToSend.getText().clear();
             }
         });
 
