@@ -4,7 +4,7 @@
  * Date: 25.11.2018
  *
  * Objective: This class inherits from JSONService and provides methods to generate a
- * JSONObject used for the GraphQL.
+ * JSONObject used for the GraphQL request.
  *
  * Comments: -
  *
