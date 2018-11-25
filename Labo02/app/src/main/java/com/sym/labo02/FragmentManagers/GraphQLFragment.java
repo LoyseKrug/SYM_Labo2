@@ -3,11 +3,14 @@
  *
  * Date: 25.11.2018
  *
- * Objective: In this fragment, the user chose an author and the server return a text
+ * Objective: In this fragment, the user chose a user and the server return all the post of this user
  *
- * Comments:
+ * Comments: In this fragment we use a RecyclerView.
  *
- * Sources: -
+ * Sources: To do so, we followed the official documentation and this post:
+ *  http://tutos-android-france.com/material-design-recyclerview-et-cardview/
+ *  and
+ *  https://developer.android.com/guide/topics/ui/layout/recyclerview
  *
  */
 
